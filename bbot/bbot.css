@@ -1,0 +1,608 @@
+/**
+ * bbot.css - Bbot 组件样式
+ * 左侧圆环+数字，右侧文字，展开后任务进度条
+ */
+
+/* ── 顶部 hover 唤醒区 ──────────────────────────────────────────────────── */
+.bbot-hover-zone {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 8px;
+    z-index: 9999;
+    cursor: default;
+    background: transparent;
+    -webkit-app-region: no-drag;
+}
+
+body.bbot-enabled .bbot-hover-zone {
+    height: 40px;
+}
+
+/* ── 容器 ───────────────────────────────────────────────────────────────── */
+.bbot {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    z-index: 10000;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bbot.bbot--visible {
+    transform: translateX(-50%) translateY(10px);
+    pointer-events: auto;
+}
+
+/* ── 药丸主体 ───────────────────────────────────────────────────────────── */
+.bbot__pill {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    width: 240px;
+    height: 42px;
+    padding: 0 16px;
+    background: var(--bg-glass, rgba(20, 20, 20, 0.92));
+    border-radius: 22px;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    box-shadow: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    user-select: none;
+    -webkit-app-region: no-drag;
+}
+
+.bbot.island--active .bbot__pill {
+    border-color: var(--accent);
+}
+
+.bbot.island--idle .bbot__pill {
+    border-color: var(--border);
+}
+
+/* ── 展开态 ─────────────────────────────────────────────────────────────── */
+.bbot.bbot--expanded .bbot__pill {
+    width: 400px;
+    height: auto;
+    max-height: 360px;
+    align-items: flex-start;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.bbot.bbot--expanded .bbot__pill::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── 圆环+数字 ──────────────────────────────────────────────────────────── */
+.bbot__ring {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bbot__ring svg {
+    position: absolute;
+    inset: 0;
+    width: 28px;
+    height: 28px;
+    transform: rotate(-90deg);
+}
+
+.bbot__ring-track {
+    fill: none;
+    stroke: var(--border, rgba(255, 255, 255, 0.1));
+    stroke-width: 3;
+}
+
+.bbot__ring-fill {
+    fill: none;
+    stroke: var(--accent, #fff);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 94.25;
+    stroke-dashoffset: 94.25;
+    transition: stroke-dashoffset 0.4s ease;
+}
+
+.bbot.bbot--completed .bbot__ring-fill {
+    stroke: var(--green, #4caf50);
+}
+
+.bbot.bbot--failed .bbot__ring-fill {
+    stroke: var(--red, #ef5350);
+}
+
+.bbot__ring-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    display: block;
+    z-index: 1;
+}
+
+.bbot__ring-num {
+    position: relative;
+    z-index: 1;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary, #f0f0f0);
+    line-height: 1;
+}
+
+/* ── 信息区 ─────────────────────────────────────────────────────────────── */
+.bbot__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    flex: 1;
+    height: 100%;
+}
+
+.bbot__subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary, #aaa);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.bbot.island--active .bbot__subtitle {
+    color: var(--text-primary, #f0f0f0);
+}
+
+/* ── 展开详情区 ─────────────────────────────────────────────────────────── */
+.bbot__detail {
+    flex-basis: 100%;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+
+.bbot.bbot--expanded .bbot__detail {
+    max-height: 300px;
+    opacity: 1;
+}
+
+/* ── 任务列表 ───────────────────────────────────────────────────────────── */
+.bbot__empty {
+    font-size: 12px;
+    color: var(--text-muted, #666);
+    padding: 8px 0;
+    text-align: center;
+}
+
+.bbot__tasks {
+    width: 100%;
+    padding-top: 6px;
+    border-top: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+    margin-top: 2px;
+}
+
+.bbot__task {
+    padding: 6px 0;
+}
+
+.bbot__task + .bbot__task {
+    border-top: 1px solid var(--border, rgba(255, 255, 255, 0.04));
+}
+
+.bbot__task-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.bbot__task-name {
+    font-size: 11px;
+    color: var(--text-secondary, #aaa);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+    margin-right: 8px;
+}
+
+.bbot__task-pct {
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    color: var(--accent, #fff);
+}
+
+.bbot__task.task--completed .bbot__task-pct {
+    color: var(--green, #4caf50);
+}
+
+.bbot__task.task--failed .bbot__task-pct {
+    color: var(--red, #ef5350);
+}
+
+.bbot__task-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border, rgba(255, 255, 255, 0.08));
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.bbot__task-bar-fill {
+    height: 100%;
+    background: var(--accent, #fff);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.bbot__task.task--completed .bbot__task-bar-fill {
+    background: var(--green, #4caf50);
+}
+
+.bbot__task.task--failed .bbot__task-bar-fill {
+    background: var(--red, #ef5350);
+}
+
+/* ── 任务错误信息 ──────────────────────────────────────────────────────── */
+.bbot__task-error {
+    font-size: 10px;
+    color: var(--red, #ef5350);
+    padding: 4px 0 2px;
+    line-height: 1.4;
+    word-break: break-all;
+}
+
+.bbot__task-current {
+    font-size: 10px;
+    color: var(--text-muted, #666);
+    padding: 4px 0 2px;
+}
+
+/* ── 阶段步骤 ───────────────────────────────────────────────────────────── */
+.bbot__stages {
+    padding-top: 6px;
+    margin-top: 4px;
+}
+
+.bbot__stage {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+    font-size: 10px;
+}
+
+.bbot__stage-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--text-muted, #666);
+}
+
+.bbot__stage-dot--active {
+    background: var(--accent, #fff);
+}
+
+.bbot__stage-dot--done {
+    background: var(--green, #4caf50);
+}
+
+.bbot__stage-name {
+    flex: 1;
+    color: var(--text-secondary, #aaa);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bbot__stage-pct {
+    color: var(--text-muted, #666);
+    font-size: 9px;
+    flex-shrink: 0;
+}
+
+/* ── 文件列表 ───────────────────────────────────────────────────────────── */
+.bbot__files {
+    padding-top: 4px;
+    margin-top: 4px;
+}
+
+.bbot__file {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 1px 0;
+    font-size: 10px;
+}
+
+.bbot__file-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-muted, #888);
+}
+
+.bbot__file-status {
+    font-size: 9px;
+    flex-shrink: 0;
+    color: var(--text-muted, #666);
+}
+
+/* ── 关闭按钮 ───────────────────────────────────────────────────────────── */
+.bbot__close {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted, #888);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.bbot__close:hover {
+    background: var(--accent, #fff);
+    color: var(--accent-text, #000);
+}
+
+/* ── 开启预览动画 ───────────────────────────────────────────────────────── */
+.bbot.bbot--preview {
+    animation: bbot-preview 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes bbot-preview {
+    0% { transform: translateX(-50%) translateY(-100%); }
+    20% { transform: translateX(-50%) translateY(10px); }
+    75% { transform: translateX(-50%) translateY(10px); }
+    100% { transform: translateX(-50%) translateY(-100%); }
+}
+
+/* ── Bbot启用时隐藏 dl-fab ──────────────────────────────────────────────── */
+body.bbot-enabled .dl-fab {
+    display: none !important;
+}
+
+/* ── Bbot 对话输入框 ────────────────────────────────────────────────────── */
+/* 对话模式下：pill 固定高度、不换行、垂直居中，覆盖展开态样式 */
+.bbot.bbot--chat .bbot__pill {
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 280px;
+    height: 56px;
+    overflow: hidden;
+}
+/* 对话模式下隐藏详情区，避免占位 */
+.bbot.bbot--chat .bbot__detail {
+    display: none;
+}
+/* 对话模式下 info 水平+垂直居中输入框 */
+.bbot.bbot--chat .bbot__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 56px;
+    flex: 1;
+    min-width: 0;
+}
+/* 对话模式下隐藏副标题 */
+.bbot.bbot--chat .bbot__subtitle {
+    display: none;
+}
+.bbot__input {
+    width: 100%;
+    min-width: 160px;
+    max-width: 220px;
+    height: 34px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--bg-input, rgba(255,255,255,0.06));
+    color: var(--text-primary, #f0f0f0);
+    font-size: 13px;
+    line-height: 34px;
+    outline: none;
+    box-shadow: none;
+    transition: background 0.2s;
+    text-align: left;
+    box-sizing: border-box;
+    margin: 0;
+}
+.bbot__input:focus {
+    background: var(--bg-input-focus, rgba(255,255,255,0.1));
+}
+.bbot__input::placeholder {
+    color: var(--text-muted, #888);
+    line-height: 34px;
+}
+
+/* ── Bbot 思考中（圆环旋转）状态 ────────────────────────────────────────── */
+.bbot--thinking .bbot__ring {
+    animation: bbot-ring-spin 1.2s linear infinite;
+}
+.bbot--thinking .bbot__ring-fill {
+    stroke: var(--accent, #fff);
+    stroke-dasharray: 30 65;
+    transition: none;
+}
+.bbot--thinking .bbot__ring-num {
+    display: none;
+}
+.bbot--thinking .bbot__ring-icon {
+    opacity: 0.5;
+}
+
+@keyframes bbot-ring-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ── Bbot 对话回复展示 ──────────────────────────────────────────────────── */
+.bbot__reply {
+    padding: 4px 0;
+    max-width: 320px;
+}
+.bbot__reply-a {
+    font-size: 13px;
+    color: var(--text-primary, #f0f0f0);
+    line-height: 1.6;
+    padding: 8px 12px;
+    background: var(--bg-glass, rgba(255,255,255,0.06));
+    border-radius: 8px;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+/* 打字机光标 */
+.bbot__reply-a .v-typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: var(--accent, #fff);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: v-typing-blink 0.8s step-end infinite;
+}
+@keyframes v-typing-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* ── Bbot 对话状态指示 ──────────────────────────────────────────────────── */
+.bbot--listening .bbot__ring-fill {
+    stroke: var(--accent, #fff);
+    animation: bbot-pulse 1.2s ease-in-out infinite;
+}
+.bbot--processing .bbot__ring-fill {
+    stroke: var(--yellow, #ff9800);
+    animation: bbot-spin 1s linear infinite;
+}
+@keyframes bbot-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+@keyframes bbot-spin {
+    0% { transform: rotate(0deg); transform-origin: center; }
+    100% { transform: rotate(360deg); transform-origin: center; }
+}
+
+/* ── Bbot 首次引导页 ────────────────────────────────────────────────────── */
+.bbot-onboarding {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+.bbot-onboarding--visible { opacity: 1; }
+.bbot-onboarding--fadeout { opacity: 0; pointer-events: none; }
+.bbot-onboarding__bg {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(40px);
+    background: var(--bg-primary, #0f0f14);
+}
+[data-theme="light"] .bbot-onboarding__bg {
+    background: radial-gradient(ellipse at 50% 40%, rgba(245,245,248,0.98), rgba(230,230,235,0.99));
+}
+[data-theme="dark"] .bbot-onboarding__bg,
+:root:not([data-theme="light"]) .bbot-onboarding__bg {
+    background: radial-gradient(ellipse at 50% 40%, rgba(30,30,35,0.98), rgba(15,15,20,0.99));
+}
+.bbot-onboarding__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 640px;
+    padding: 40px;
+}
+.bbot-onboarding__phase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+.bbot-onboarding__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary, #f0f0f0);
+    margin: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.bbot-onboarding__title.v-appear { opacity: 1; transform: translateY(0); }
+.bbot-onboarding__subtitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary, #f0f0f0);
+    margin: 0;
+}
+.bbot-onboarding__desc {
+    font-size: 14px;
+    color: var(--text-secondary, #aaa);
+    margin: 0;
+    line-height: 1.6;
+}
+.bbot-onboarding__providers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+    width: 100%;
+    max-width: 500px;
+    margin: 16px 0;
+}
+.bbot-onboarding-provider-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border: 2px solid var(--border, rgba(255,255,255,0.08));
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s;
+}
+.bbot-onboarding-provider-card:hover { border-color: var(--accent, #fff); }
+.bbot-onboarding-provider-card--active {
+    border-color: var(--accent, #fff);
+    background: rgba(255,255,255,0.05);
+}
+.bbot-onboarding-provider-card img { width: 32px; height: 32px; border-radius: 6px; }
+.bbot-onboarding-provider-card span { font-size: 11px; color: var(--text-secondary); text-align: center; }
+.bbot-onboarding__config {
+    width: 100%;
+    max-width: 360px;
+    margin-top: 8px;
+}
+.bbot-onboarding__actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+

@@ -1,0 +1,1727 @@
+/**
+ * layout.css - 主布局样式表
+ * ----------------------------------------------------------------------------
+ * 文件职责：定义应用主框架布局，包括侧边栏导航、内容区、首页英雄区、
+ * 卡片容器、账户头像、新闻列表等布局结构。
+ *
+ * 样式分区：
+ * 1. 侧边栏 - 左侧导航栏容器、导航按钮、子菜单
+ * 2. 内容区 - 主内容滚动容器、页面头部
+ * 3. 首页 - 英雄区、统计卡片、快速启动
+ * 4. 卡片 - 通用卡片容器
+ * 5. 新闻列表 - 版本动态条目
+ * 6. 账户 - 头像、信息展示
+ * 7. 游戏运行态 - 运行时动画抑制
+ */
+
+/* 侧边栏 - iOS 26 液态玻璃导航容器 */
+.sidebar {
+    position: relative;
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar-glass);
+    backdrop-filter: blur(var(--glass-blur-heavy)) saturate(var(--glass-saturate-strong)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(var(--glass-saturate-strong)) brightness(var(--glass-brightness));
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--glass-border);
+    flex-shrink: 0;
+    padding: 12px 8px;
+    animation: slideRight 0.5s var(--ios-spring) both;
+    overflow: hidden;
+    contain: layout style;
+    will-change: transform;
+    transform: translateZ(0);
+    box-shadow:
+        inset -1px 0 0 rgba(255, 255, 255, 0.4),
+        4px 0 24px rgba(0, 0, 0, 0.04);
+}
+
+/* 侧边栏液态玻璃表面光泽 */
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 1px;
+    bottom: 0;
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        transparent 25%,
+        transparent 75%,
+        rgba(255, 255, 255, 0.15) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 侧边栏内容层级提升 */
+.sidebar > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* 更新页面 */
+.update-container {
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+/* 侧边栏按钮 Beta 徽章 */
+.nav-btn-badge {
+    position: absolute;
+    top: -1px;
+    right: -2px;
+    z-index: 2;
+    font-size: 7px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 10px;
+    background: #eab308;
+    color: #000;
+    opacity: 0.7;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.25s var(--ease-out-expo);
+}
+.nav-btn:hover .nav-btn-badge,
+.nav-btn.active .nav-btn-badge {
+    opacity: 1;
+}
+ 
+  body.game-running .sidebar {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--sidebar-bg-solid, rgba(30, 30, 35, 0.95)) !important;
+}
+
+.sidebar-nav, .sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar-footer {
+    flex-shrink: 0;
+    border-top: 1px solid rgba(var(--accent-rgb), 0.06);
+    padding-top: 6px;
+    margin-top: 4px;
+}
+
+/* 导航按钮 - iOS 26 液态玻璃胶囊按钮 */
+.nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 4px 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 16px;
+    transition:
+        color 0.3s var(--ios-ease-out),
+        transform 0.35s var(--ios-spring),
+        background 0.3s var(--ios-ease-out);
+    width: 64px;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    position: relative;
+    overflow: visible;
+    flex-shrink: 0;
+    transform: translateZ(0);
+}
+
+/* iOS 26 液态玻璃选中指示器 - 左侧胶囊条 */
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 4px;
+    height: 24px;
+    background: var(--accent-color);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+    transition: transform 0.4s var(--ios-spring), opacity 0.3s var(--ios-ease-out);
+    opacity: 0;
+    z-index: 3;
+}
+
+.nav-btn.active::before {
+    transform: translateY(-50%) scaleY(1);
+    opacity: 1;
+}
+
+/* iOS 26 液态玻璃背景层 - 选中态高亮 */
+.nav-btn::after {
+    content: '';
+    position: absolute;
+    inset: 4px 6px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px) saturate(1.5);
+    -webkit-backdrop-filter: blur(8px) saturate(1.5);
+    opacity: 0;
+    border-radius: 12px;
+    transition: opacity 0.3s var(--ios-ease-out);
+    pointer-events: none;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.nav-btn:hover::after {
+    opacity: 0.7;
+}
+
+.nav-btn.active::after {
+    opacity: 1;
+    background: rgba(59, 130, 246, 0.12);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        0 2px 12px rgba(59, 130, 246, 0.15);
+}
+
+.nav-btn svg {
+    width: 22px;
+    height: 22px;
+    transition:
+        transform 0.35s var(--ios-spring),
+        filter 0.3s var(--ios-ease-out),
+        opacity 0.25s var(--ios-ease-out);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.nav-btn:hover {
+    color: var(--text-secondary);
+    transform: translateY(-2px) translateZ(4px) scale(1.04);
+}
+
+.nav-btn:hover svg {
+    transform: scale(1.12);
+}
+
+.nav-btn:active {
+    transform: translateY(0) translateZ(1px) scale(0.96);
+    transition-duration: 0.15s;
+}
+
+.nav-btn:active svg {
+    transform: scale(0.9);
+}
+
+.nav-btn.active {
+    color: var(--accent-color);
+}
+
+.nav-btn.active svg {
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.4));
+}
+
+/* 简约线条导航图标 */
+.nav-icon-svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s var(--ease-out-expo), opacity 0.25s var(--ease-out-expo);
+    flex-shrink: 0;
+    display: block;
+    color: var(--text-primary);
+}
+
+.nav-btn:hover .nav-icon-svg {
+    transform: scale(1.1);
+}
+.nav-btn:active .nav-icon-svg {
+    transform: scale(0.88);
+}
+.nav-btn.active .nav-icon-svg {
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+.nav-globe-icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    opacity: 0.5;
+    transition: opacity 0.25s var(--ease-out-expo), border-color 0.25s var(--ease-out-expo), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin: 0 auto 2px;
+}
+.nav-btn:hover .nav-globe-icon,
+.nav-btn.active .nav-globe-icon {
+    opacity: 1;
+}
+.nav-globe-icon::before {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    right: 2px; bottom: 2px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.4;
+}
+.nav-globe-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    right: -2px;
+    border-top: 1.5px solid currentColor;
+    transform: translateY(-50%);
+    opacity: 0.4;
+}
+
+/* Bbot 功能导航按钮 - 蓝色高亮标识 Bbot 功能 */
+.nav-btn-experimental {
+    color: var(--accent-color);
+}
+.nav-btn-experimental::after {
+    background: var(--accent-color);
+    opacity: 0;
+}
+.nav-btn-experimental:hover {
+    color: var(--accent-color);
+    opacity: 0.85;
+}
+.nav-btn-experimental:hover::after {
+    opacity: 0.08;
+}
+.nav-btn-experimental.active {
+    color: var(--accent-color);
+}
+.nav-btn-experimental.active::after {
+    opacity: 0.12;
+}
+.nav-btn-experimental.active svg {
+    filter: drop-shadow(0 0 6px var(--accent-color));
+}
+.nav-btn-experimental-badge {
+    position: absolute;
+    top: -1px;
+    right: -2px;
+    z-index: 2;
+    font-size: 7px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 10px;
+    background: var(--accent-color);
+    color: #fff;
+    opacity: 0.7;
+    pointer-events: none;
+    transition: opacity 0.25s var(--ease-out-expo);
+}
+.nav-btn-experimental:hover .nav-btn-experimental-badge,
+.nav-btn-experimental.active .nav-btn-experimental-badge {
+    opacity: 1;
+}
+
+/* 导航子菜单 - 可折叠的二级导航 */
+.nav-submenu-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-submenu-toggle {
+    width: 60px;
+    overflow: visible;
+}
+
+.nav-submenu-toggle .submenu-arrow {
+    width: 10px;
+    height: 10px;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s var(--ease-out-expo);
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.4;
+}
+
+.nav-submenu-group.open .submenu-arrow {
+    transform: translateX(-50%) rotate(180deg);
+    opacity: 0.6;
+}
+
+.nav-btn:hover .submenu-arrow {
+    opacity: 0.6;
+}
+
+.nav-btn.active .submenu-arrow {
+    opacity: 0.8;
+}
+
+.nav-submenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s var(--ease-out-expo);
+    opacity: 0;
+}
+
+.nav-submenu-group.open .nav-submenu {
+    max-height: 300px;
+    opacity: 1;
+}
+
+.nav-sub-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 5px 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: color 0.25s var(--ease-out-expo), transform 0.2s var(--ease-out-expo);
+    font-size: 10px;
+    letter-spacing: 0.01em;
+    font-weight: 500;
+    width: 58px;
+    white-space: nowrap;
+    position: relative;
+}
+
+.nav-sub-btn::after {
+    content: '';
+    position: absolute;
+    inset: 1px 3px;
+    background: var(--accent);
+    opacity: 0;
+    border-radius: 7px;
+    transition: opacity 0.25s var(--ease-out-expo);
+    pointer-events: none;
+}
+
+.nav-sub-btn:hover::after {
+    opacity: 0.05;
+}
+
+.nav-sub-btn.active::after {
+    opacity: 0.08;
+}
+
+.nav-sub-btn svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
+.nav-sub-btn:hover {
+    color: var(--text-secondary);
+    transform: scale(1.06);
+}
+
+.nav-sub-btn:active {
+    transform: scale(0.94);
+}
+
+.nav-sub-btn.active {
+    color: var(--text-primary);
+}
+
+.nav-sub-btn .nav-btn-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    z-index: 2;
+    font-size: 7px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 10px;
+    background: #eab308;
+    color: #000;
+    opacity: 0.7;
+    pointer-events: none;
+    user-select: none;
+}
+
+.nav-sub-btn:hover .nav-btn-badge,
+.nav-sub-btn.active .nav-btn-badge {
+    opacity: 1;
+}
+
+/* 内容区 - iOS 26 主内容容器 */
+.content-area {
+    flex: 1;
+    overflow: hidden;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    animation: pageIn 0.5s var(--ios-spring) 0.15s both;
+    will-change: transform, opacity;
+    background: transparent;
+    transform: translateZ(0);
+}
+
+.content-area.no-scroll {
+    overflow: hidden;
+    padding: 0;
+}
+
+.page.active {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: scroll-position;
+    background: transparent;
+}
+
+.page.active::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.page.active::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+.page.active::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.35);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.3s var(--ios-ease-out);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.page.active::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.55);
+    background-clip: padding-box;
+}
+
+.page.active::-webkit-scrollbar-thumb:active {
+    background: rgba(59, 130, 246, 0.7);
+    background-clip: padding-box;
+}
+
+.page.active::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow-inset), 0 2px 8px rgba(0, 0, 0, 0.04);
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateZ(0);
+}
+
+.page-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 首页英雄区 - iOS 26 液态玻璃主视觉 */
+.home-hero {
+    position: relative;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    border-radius: var(--radius-xl);
+    padding: 44px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow-lg), var(--glass-shadow-inset);
+    contain: layout style;
+    will-change: transform;
+    transform: translateZ(0);
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+
+/* 英雄区液态玻璃表面光泽 */
+.home-hero::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.06) 40%,
+        transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.8;
+}
+
+.home-hero > * {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    max-width: 50%;
+}
+
+.hero-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.hero-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    padding: 18px 26px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    border: 1px solid var(--glass-border);
+    min-width: 104px;
+    box-shadow: var(--glass-shadow), var(--glass-shadow-inset);
+    transition:
+        transform 0.4s var(--ios-spring),
+        box-shadow 0.4s var(--ios-ease-out);
+    contain: layout style;
+    will-change: transform;
+    transform: translateZ(0);
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px) translateZ(var(--glass-translate-z));
+    box-shadow: var(--glass-shadow-hover), var(--glass-shadow-inset);
+}
+
+.stat-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.stat-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.home-quick-actions {
+    margin-bottom: 24px;
+}
+
+.home-launch-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 16px 24px;
+}
+
+.home-launch-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.home-launch-right {
+    flex: 1;
+    min-width: 0;
+}
+
+/* 通用卡片容器 - iOS 26 液态玻璃卡片 */
+.card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    border: 1px solid var(--glass-border);
+    transition:
+        transform 0.4s var(--ios-spring),
+        box-shadow 0.4s var(--ios-ease-out),
+        border-color 0.3s var(--ios-ease-out);
+    will-change: transform;
+    box-shadow: var(--glass-shadow), var(--glass-shadow-inset);
+    contain: layout style;
+    transform: translateZ(0);
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.7;
+}
+
+.card > * {
+    position: relative;
+    z-index: 2;
+}
+
+.card:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateY(-3px) translateZ(var(--glass-translate-z));
+    box-shadow: var(--glass-shadow-hover), var(--glass-shadow-inset);
+}
+
+.card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.quick-launch {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* 新闻列表 - 版本动态条目 */
+.news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.news-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.news-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.news-badge.release {
+    background: rgba(76, 175, 80, 0.15);
+    color: var(--green);
+}
+
+.news-badge.snapshot {
+    background: rgba(255, 152, 0, 0.15);
+    color: var(--orange);
+}
+
+/* 首页布局 - home-container, home-main, home-card, home-grid */
+.home-container {
+    padding: 24px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.home-header-right {
+    display: flex;
+    gap: 8px;
+}
+
+.home-header-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        transform 0.3s var(--ios-spring),
+        background 0.25s var(--ios-ease-out),
+        color 0.25s var(--ios-ease-out);
+    box-shadow: var(--glass-shadow-inset);
+    transform: translateZ(0);
+}
+
+.home-header-btn:hover {
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--text-primary);
+    transform: translateY(-2px) translateZ(3px);
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        var(--glass-shadow-inset);
+}
+
+/* 检查更新按钮 - 蓝色突出样式，位置明显 */
+.home-update-btn {
+    background: rgba(59, 130, 246, 0.92);
+    color: #ffffff;
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow:
+        0 2px 8px rgba(59, 130, 246, 0.25),
+        var(--glass-shadow-inset);
+    font-weight: 600;
+}
+
+.home-update-btn:hover {
+    background: rgba(59, 130, 246, 1);
+    color: #ffffff;
+    transform: translateY(-2px) translateZ(3px);
+    box-shadow:
+        0 6px 20px rgba(59, 130, 246, 0.35),
+        var(--glass-shadow-inset);
+}
+
+.home-update-btn:active {
+    transform: translateY(0) translateZ(1px) scale(0.97);
+    transition-duration: 0.12s;
+}
+
+.home-update-btn svg {
+    transition: transform 0.5s var(--ios-spring);
+}
+
+.home-update-btn:hover svg {
+    transform: rotate(180deg);
+}
+
+.home-main {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: visible;
+    padding-right: 4px;
+}
+
+.home-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), var(--glass-shadow-inset);
+    transition:
+        transform 0.4s var(--ios-spring),
+        box-shadow 0.4s var(--ios-ease-out);
+    transform: translateZ(0);
+    overflow: visible;
+}
+
+.home-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.7;
+}
+
+.home-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.home-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+.home-card:hover {
+    box-shadow: var(--glass-shadow-hover), var(--glass-shadow-inset);
+    transform: translateY(-2px) translateZ(4px);
+}
+
+.home-main-card {
+    max-width: 420px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+.home-account-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.25s ease;
+    margin: -12px;
+}
+
+.home-account-section:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.home-account-avatar {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+.home-account-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.home-account-status {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.home-account-status.offline {
+    background: var(--text-muted);
+}
+
+.home-account-status.online {
+    background: var(--green);
+}
+
+.home-account-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.home-account-name {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.home-account-type {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.home-account-arrow {
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.home-divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.06);
+    margin: 16px 0;
+}
+
+.home-version-section {
+    margin-bottom: 20px;
+}
+
+.home-version-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.home-version-selector {
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+.home-version-selector:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.home-launch-btn {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    background: #3b82f6;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    overflow: visible;
+    margin-top: 4px;
+}
+
+.home-launch-btn:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
+}
+
+.home-launch-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.home-grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 16px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur-light)) saturate(var(--glass-saturate));
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--glass-shadow);
+    color: var(--text-secondary);
+}
+
+.home-grid-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--glass-shadow-lg);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: var(--text-primary);
+}
+
+.home-grid-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.home-grid-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.home-activity-card {
+    margin-top: 8px;
+}
+
+.home-activity-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.home-activity-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.home-activity-content {
+    min-height: 120px;
+}
+
+.home-activity-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    gap: 12px;
+}
+
+.home-activity-empty-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.home-activity-empty-hint {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.35);
+}
+
+/* 账户信息 - 头像、名称、类型展示 */
+.account-quick-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.account-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    background: var(--bg-active);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.account-avatar:has(.account-avatar-img) {
+    display: block;
+    font-size: 0;
+    line-height: 0;
+}
+
+.account-avatar-img {
+    width: 64px;
+    height: 64px;
+    display: block;
+}
+
+.account-item .account-avatar-img {
+    width: 48px;
+    height: 48px;
+}
+
+.account-avatar-sm .account-avatar-img {
+    width: 28px;
+    height: 28px;
+}
+
+.account-avatar-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.account-avatar-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: var(--bg-active);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.account-avatar-sm:has(.account-avatar-img) {
+    display: block;
+    font-size: 0;
+    line-height: 0;
+}
+
+.account-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.account-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.account-type {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* 游戏运行态 - 运行时抑制装饰性动画以节省资源 */
+body.game-running .dot-pulse,
+body.game-running .spin,
+body.game-running [class*="pulse"],
+body.game-running [class*="shimmer"] {
+    animation: none !important;
+}
+
+/* 蓝天新云账户头像 - 标题栏右侧 */
+.cloud-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-active);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s var(--ease-out-expo);
+    -webkit-app-region: no-drag;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1.5px dashed var(--text-muted);
+    opacity: 0.75;
+}
+
+.cloud-avatar:hover {
+    opacity: 1;
+    border-color: var(--accent);
+    background: var(--bg-hover);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.cloud-avatar-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cloud-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.cloud-avatar-plus {
+    width: 14px;
+    height: 14px;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.cloud-avatar:hover .cloud-avatar-plus {
+    color: var(--accent);
+    opacity: 1;
+}
+
+/* 已登录状态 */
+.cloud-avatar.logged-in {
+    border: 1.5px solid var(--accent);
+    opacity: 1;
+}
+
+.cloud-avatar.logged-in .cloud-avatar-plus {
+    display: none;
+}
+
+.cloud-avatar.logged-in:hover {
+    box-shadow: 0 0 12px var(--accent-glow);
+    border-color: var(--accent);
+}
+
+/* 蓝天新云头像包裹容器（下拉菜单定位锚点） */
+.cloud-avatar-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* 蓝天新云下拉菜单 */
+.cloud-dropdown {
+    position: fixed;
+    min-width: 180px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    box-shadow: var(--glass-shadow-lg);
+    z-index: 2147483647;
+    animation: dropdownFadeIn 0.15s var(--ease-out-expo);
+    contain: layout style;
+}
+
+@keyframes dropdownFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.cloud-dropdown-header {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cloud-dropdown-divider {
+    height: 1px;
+    background: var(--border, rgba(255,255,255,0.06));
+    margin: 0;
+}
+
+.cloud-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.12s ease;
+    -webkit-app-region: no-drag;
+}
+
+.cloud-dropdown-item:hover {
+    background: var(--bg-hover, rgba(255,255,255,0.06));
+}
+
+.cloud-dropdown-item--danger {
+    color: #ef4444;
+}
+
+.cloud-dropdown-item--danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* 云同步独立页面 */
+.cloudsync-container {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.cloudsync-info-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.cloudsync-info-bar strong {
+    color: var(--text-primary);
+}
+
+.cloudsync-info-bar .btn {
+    margin-left: auto;
+}
+
+.cloudsync-backups-section {
+    min-height: 200px;
+}
+
+.cloudsync-loading {
+    text-align: center;
+    padding: 60px 0;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.cloudsync-empty {
+    text-align: center;
+    padding: 60px 0;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.cloudsync-storage-info {
+    text-align: center;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+}
+
+.cloudsync-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cloudsync-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.15s;
+}
+
+.cloudsync-item:hover {
+    border-color: var(--accent);
+}
+
+.cloudsync-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+}
+
+.cloudsync-item-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cloudsync-item-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.cloudsync-item-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* 响应式适配 - 桌面端、平板、移动端 */
+@media (max-width: 1280px) {
+    .home-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 10px;
+    }
+    
+    .home-main-card {
+        max-width: 380px;
+    }
+    
+    .home-hero {
+        padding: 32px;
+    }
+    
+    .hero-title {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .home-container {
+        padding: 16px;
+    }
+    
+    .home-header {
+        margin-bottom: 16px;
+    }
+    
+    .home-main-card {
+        max-width: 100%;
+    }
+    
+    .home-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+    }
+    
+    .home-grid-item {
+        padding: 16px 12px;
+    }
+    
+    .home-grid-icon {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .home-launch-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .hero-title {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+        padding: 10px 4px;
+    }
+    
+    .home-container {
+        padding: 12px;
+    }
+    
+    .home-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .home-header-right {
+        margin-left: auto;
+    }
+    
+    .home-main {
+        gap: 16px;
+    }
+    
+    .home-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+    
+    .home-grid-item {
+        padding: 14px 10px;
+    }
+    
+    .home-grid-icon {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .home-grid-text {
+        font-size: 12px;
+    }
+    
+    .home-account-section {
+        gap: 12px;
+    }
+    
+    .home-account-avatar {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .home-account-name {
+        font-size: 14px;
+    }
+    
+    .home-launch-btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .hero-title {
+        font-size: 24px;
+    }
+    
+    .hero-subtitle {
+        font-size: 16px;
+    }
+    
+    .hero-stats {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .stat-card {
+        min-width: 80px;
+        padding: 12px 16px;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+    }
+    
+    .home-activity-card {
+        margin-top: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 56px;
+    }
+    
+    .home-container {
+        padding: 8px;
+    }
+    
+    .home-header-btn span {
+        display: none;
+    }
+    
+    .home-grid {
+        grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+        gap: 6px;
+    }
+    
+    .home-grid-item {
+        padding: 12px 8px;
+    }
+    
+    .home-grid-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .home-grid-text {
+        font-size: 11px;
+    }
+    
+    .home-card {
+        padding: 16px;
+    }
+    
+    .home-main-card {
+        padding: 16px;
+    }
+    
+    .home-account-section {
+        padding: 8px;
+        margin: -8px;
+    }
+    
+    .home-account-avatar {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .home-launch-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .hero-title {
+        font-size: 20px;
+    }
+    
+    .hero-subtitle {
+        font-size: 14px;
+    }
+    
+    .hero-desc {
+        font-size: 12px;
+    }
+}

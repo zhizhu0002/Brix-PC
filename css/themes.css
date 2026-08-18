@@ -1,0 +1,233 @@
+/**
+ * Brix - Minecraft Launcher
+ * Copyright (c) 2026 YMA. All Rights Reserved.
+ *
+ * AI TRAINING PROHIBITED: This code is protected by copyright law.
+ * Unauthorized use for AI model training, machine learning datasets,
+ * or any form of artificial intelligence training is strictly prohibited.
+ *
+ * This software is proprietary and confidential.
+ * Any unauthorized reproduction or distribution is prohibited.
+ */
+
+/**
+ * Brix - 主题色方案
+ * ============================================================================
+ * 通过 data-theme 属性切换不同主题色方案
+ * 每个主题定义完整的颜色变量，与style.css 中:root 变量配合使用
+ *
+ * 可用主题:
+ * - dark  (默认) - 黑色主题
+ * - light        - 白色主题
+ */
+
+[data-theme="dark"] {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #141414;
+    --bg-tertiary: #1c1c1c;
+    --bg-card: #181818;
+    --bg-hover: #242424;
+    --bg-active: #2e2e2e;
+    --text-primary: #f0f0f0;
+    --text-secondary: #a0a0a0;
+    --text-muted: #666666;
+    --accent: #ffffff;
+    --accent-hover: #d0d0d0;
+    --accent-glow: rgba(255, 255, 255, 0.15);
+    --accent-text: #0a0a0a;
+    --accent-color: #3b82f6;
+    --accent-orange: #f97316;
+    --accent-yellow: #eab308;
+
+    /* iOS 26 深色液态玻璃 */
+    --bg-glass: rgba(20, 20, 24, 0.78);
+    --bg-card-glass: rgba(28, 28, 32, 0.72);
+    --bg-sidebar-glass: rgba(12, 12, 14, 0.82);
+    --bg-titlebar-glass: rgba(12, 12, 14, 0.78);
+    --bg-panel-glass: rgba(20, 20, 25, 0.68);
+
+    --glass-blur: 24px;
+    --glass-blur-light: 18px;
+    --glass-blur-heavy: 32px;
+    --glass-saturate: 1.6;
+    --glass-saturate-strong: 2;
+    --glass-brightness: 0.95;
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --glass-border-light: rgba(255, 255, 255, 0.2);
+    --glass-border-dark: rgba(255, 255, 255, 0.06);
+
+    /* iOS 26 深色多层投影 */
+    --glass-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        0 12px 32px rgba(0, 0, 0, 0.3);
+    --glass-shadow-lg:
+        0 2px 4px rgba(0, 0, 0, 0.25),
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        0 20px 56px rgba(0, 0, 0, 0.35);
+    --glass-shadow-hover:
+        0 2px 6px rgba(0, 0, 0, 0.25),
+        0 12px 32px rgba(0, 0, 0, 0.35),
+        0 24px 64px rgba(0, 0, 0, 0.4);
+    --glass-shadow-inset:
+        inset 0 1px 1px rgba(255, 255, 255, 0.08),
+        inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+
+    --accent-rgb: 255, 255, 255;
+    --green: #4caf50;
+    --green-glow: rgba(76, 175, 80, 0.3);
+    --red: #ef5350;
+    --red-glow: rgba(239, 83, 80, 0.3);
+    --orange: #f97316;
+    --yellow: #eab308;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-glass: rgba(255, 255, 255, 0.14);
+    --hover-overlay: rgba(255, 255, 255, 0.06);
+    --dot-border: rgba(255, 255, 255, 0.2);
+    --splash-bg-start: #0a0a0a;
+    --splash-bg-end: #050505;
+    --launch-bg: #0a0a0a;
+    --launch-track-bg: rgba(255, 255, 255, 0.08);
+    --launch-progress-bg: #3b82f6;
+    --launch-status-color: rgba(255, 255, 255, 0.4);
+    --launch-error-bg: rgba(220, 38, 38, 0.1);
+    --launch-error-border: rgba(220, 38, 38, 0.2);
+    --launch-error-msg-color: rgba(255, 255, 255, 0.6);
+    --launch-repair-bg: rgba(59, 130, 246, 0.1);
+    --launch-repair-border: rgba(59, 130, 246, 0.2);
+    --launch-repair-color: rgba(255, 255, 255, 0.7);
+    --hero-gradient-start: #ffffff;
+    --hero-gradient-end: #888888;
+    --accent-blue: #3b82f6;
+
+    /* iOS 26 深色阴影 */
+    --shadow:
+        0 1px 2px rgba(0, 0, 0, 0.25),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: var(--glass-shadow-lg);
+    --shadow-glass: var(--glass-shadow);
+
+    /* iOS 26 圆角 */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --sidebar-width: 84px;
+    --titlebar-height: 44px;
+    --launchbar-height: 60px;
+
+    /* iOS 26 弹簧曲线 */
+    --transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ios-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ios-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --sidebar-bg-solid: rgba(20, 20, 20, 0.95);
+}
+
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f7;
+    --bg-tertiary: #eeeef0;
+    --bg-card: #fafafa;
+    --bg-hover: #e8e8ed;
+    --bg-active: #dddde5;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #8a8a8a;
+    --accent: #1a1a1a;
+    --accent-hover: #333333;
+    --accent-glow: rgba(0, 0, 0, 0.1);
+    --accent-text: #ffffff;
+    --accent-color: #3b82f6;
+    --accent-orange: #f97316;
+    --accent-yellow: #eab308;
+
+    /* iOS 26 浅色液态玻璃 - 明亮通透 */
+    --bg-glass: rgba(255, 255, 255, 0.72);
+    --bg-card-glass: rgba(255, 255, 255, 0.68);
+    --bg-sidebar-glass: rgba(255, 255, 255, 0.7);
+    --bg-titlebar-glass: rgba(255, 255, 255, 0.78);
+    --bg-panel-glass: rgba(255, 255, 255, 0.6);
+
+    --glass-blur: 24px;
+    --glass-blur-light: 18px;
+    --glass-blur-heavy: 32px;
+    --glass-saturate: 1.8;
+    --glass-saturate-strong: 2.2;
+    --glass-brightness: 1.08;
+    --glass-border: rgba(255, 255, 255, 0.55);
+    --glass-border-light: rgba(255, 255, 255, 0.7);
+    --glass-border-dark: rgba(255, 255, 255, 0.2);
+
+    /* iOS 26 浅色多层投影 */
+    --glass-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        0 12px 32px rgba(0, 0, 0, 0.05);
+    --glass-shadow-lg:
+        0 2px 4px rgba(0, 0, 0, 0.05),
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 20px 56px rgba(0, 0, 0, 0.07);
+    --glass-shadow-hover:
+        0 2px 6px rgba(0, 0, 0, 0.06),
+        0 12px 32px rgba(0, 0, 0, 0.1),
+        0 24px 64px rgba(0, 0, 0, 0.08);
+    --glass-shadow-inset:
+        inset 0 1px 1px rgba(255, 255, 255, 0.6),
+        inset 0 -1px 1px rgba(0, 0, 0, 0.03);
+
+    --accent-rgb: 26, 26, 26;
+    --green: #16a34a;
+    --green-glow: rgba(22, 163, 74, 0.15);
+    --red: #dc2626;
+    --red-glow: rgba(220, 38, 38, 0.15);
+    --orange: #f97316;
+    --yellow: #eab308;
+    --border: rgba(255, 255, 255, 0.55);
+    --border-glass: rgba(255, 255, 255, 0.55);
+    --hover-overlay: rgba(59, 130, 246, 0.08);
+    --dot-border: rgba(0, 0, 0, 0.15);
+    --splash-bg-start: #ffffff;
+    --splash-bg-end: #e8ecf1;
+    --launch-bg: #ffffff;
+    --launch-track-bg: #e2e8f0;
+    --launch-progress-bg: #3b82f6;
+    --launch-status-color: #94a3b8;
+    --launch-error-bg: #fef2f2;
+    --launch-error-border: #fecaca;
+    --launch-error-msg-color: #475569;
+    --launch-repair-bg: #eff6ff;
+    --launch-repair-border: #bfdbfe;
+    --launch-repair-color: #334155;
+    --hero-gradient-start: #1a1a1a;
+    --hero-gradient-end: #666666;
+    --accent-blue: #3b82f6;
+
+    /* iOS 26 浅色阴影 */
+    --shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-lg: var(--glass-shadow-lg);
+    --shadow-glass: var(--glass-shadow);
+
+    /* iOS 26 圆角 */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --sidebar-width: 84px;
+    --titlebar-height: 44px;
+    --launchbar-height: 60px;
+
+    /* iOS 26 弹簧曲线 */
+    --transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ios-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ios-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --sidebar-bg-solid: rgba(245, 245, 247, 0.95);
+}
+
